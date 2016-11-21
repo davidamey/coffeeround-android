@@ -9,13 +9,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import uk.org.amey.android.coffeeround.R;
-import uk.org.amey.android.coffeeround.data.Person;
+import uk.org.amey.android.coffeeround.data.model.User;
 
 public class LeaderboardFragment extends Fragment implements LeaderboardContract.View {
 
@@ -35,13 +35,7 @@ public class LeaderboardFragment extends Fragment implements LeaderboardContract
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        ArrayList<Person> dummyData = new ArrayList<Person>();
-        for (int i = 0; i < 20; i++) {
-            dummyData.add(new Person());
-        }
-
-        leaderboardAdapter = new LeaderboardAdapter(dummyData, null);
+        leaderboardAdapter = new LeaderboardAdapter(new ArrayList<User>(0), null);
     }
 
     @Override
@@ -76,13 +70,13 @@ public class LeaderboardFragment extends Fragment implements LeaderboardContract
     }
 
     @Override
-    public void showLeaders(List<Person> people) {
-
+    public void showLeaderboard(List<User> users) {
+        leaderboardAdapter.replaceData(users);
     }
 
     @Override
     public void showAddRound() {
-        Snackbar.make(this.getView(), "Presenter start", Snackbar.LENGTH_LONG).show();
+        Snackbar.make(this.getView(), "Presenter start", Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -104,18 +98,32 @@ public class LeaderboardFragment extends Fragment implements LeaderboardContract
 
     //region Adapter
     private static class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.ViewHolder> {
-        private List<Person> people;
+        private List<User> users;
         private LeaderboardItemListener itemListener;
 
         public static class ViewHolder extends RecyclerView.ViewHolder {
 
+            private final TextView tvUserName;
+            private final TextView tvCountTotal;
+
             public ViewHolder(View itemView) {
                 super(itemView);
+
+                tvUserName = (TextView)itemView.findViewById(R.id.user_name);
+                tvCountTotal = (TextView)itemView.findViewById(R.id.count_total);
+            }
+
+            public void setName(String name) {
+                tvUserName.setText(name);
+            }
+
+            public void setCountTotal(int total) {
+                tvCountTotal.setText(Integer.toString(total));
             }
         }
 
-        public LeaderboardAdapter(List<Person> people, LeaderboardItemListener itemListener) {
-            this.people = people;
+        public LeaderboardAdapter(List<User> users, LeaderboardItemListener itemListener) {
+            this.users = users;
             this.itemListener = itemListener;
         }
 
@@ -130,17 +138,24 @@ public class LeaderboardFragment extends Fragment implements LeaderboardContract
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            // Set the viewholder data.
+            holder.setName(users.get(position).name);
+            holder.setCountTotal(users.get(position).total);
         }
 
         @Override
         public int getItemCount() {
-            return people.size();
+            return users.size();
+        }
+
+        public void replaceData(List<User> users) {
+            this.users.clear();
+            this.users.addAll(users);
+            notifyDataSetChanged();
         }
     }
 
     public interface LeaderboardItemListener {
-        void onItemClick(Person clickedPerson);
+        void onItemClick(User clickedUser);
     }
     //endregion
 }

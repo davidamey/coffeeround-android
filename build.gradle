@@ -30,6 +30,7 @@ ext {
     // App dependencies
     supportLibraryVersion = '25.0.1'
     playServicesVersion = '9.8.0'
+    retrofitVersion = '2.1.0'
 
     // Test dependencies
     junitVersion = '4.12'
