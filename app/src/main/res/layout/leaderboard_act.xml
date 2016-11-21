@@ -32,23 +32,28 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/scroll_view"
+    <FrameLayout
+        android:id="@+id/content_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="uk.org.amey.android.coffeeround.MainActivity">
+        tools:context="uk.org.amey.android.coffeeround.leaderboard.LeaderboardActivity">
 
-        <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="Hi" />-->
+    </FrameLayout>
 
-        <!--<FrameLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"></FrameLayout>-->
+    <!--<android.support.v4.widget.NestedScrollView-->
+        <!--android:id="@+id/scroll_view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+        <!--tools:context="uk.org.amey.android.coffeeround.MainActivity">-->
 
-    </android.support.v4.widget.NestedScrollView>
+        <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:text="Hi" />&ndash;&gt;-->
+
+    <!--</android.support.v4.widget.NestedScrollView>-->
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
