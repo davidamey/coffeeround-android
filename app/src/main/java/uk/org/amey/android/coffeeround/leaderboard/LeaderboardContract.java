@@ -18,7 +18,11 @@ public interface LeaderboardContract {
 
         void showLoadingLeaderboardError();
 
+<<<<<<< HEAD
         void showNoUsers();
+=======
+        void showNoLeaders();
+>>>>>>> fd6c2ed50362228080f188ff735962147363fd60
 
     }
 
