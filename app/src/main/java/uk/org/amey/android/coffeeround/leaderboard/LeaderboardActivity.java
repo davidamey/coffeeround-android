@@ -16,12 +16,12 @@ public class LeaderboardActivity extends AppCompatActivity{
         setContentView(R.layout.leaderboard_act);
 
         LeaderboardFragment leaderboardFragment =
-                (LeaderboardFragment) getFragmentManager().findFragmentById(R.id.scroll_view);
+                (LeaderboardFragment) getFragmentManager().findFragmentById(R.id.content_view);
 
         if (leaderboardFragment == null) {
             leaderboardFragment = LeaderboardFragment.newInstance();
             getFragmentManager().beginTransaction()
-                    .add(R.id.scroll_view, leaderboardFragment)
+                    .add(R.id.content_view, leaderboardFragment)
                     .commit();
         }
 
