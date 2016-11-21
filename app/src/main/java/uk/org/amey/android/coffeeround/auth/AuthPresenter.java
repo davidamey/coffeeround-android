@@ -1,0 +1,4 @@
+package uk.org.amey.android.coffeeround.auth;
+
+public class AuthPresenter {
+}

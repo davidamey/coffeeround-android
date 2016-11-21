@@ -1,4 +1,4 @@
-package uk.org.amey.coffeeround;
+package uk.org.amey.android.coffeeround;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("uk.org.amey.coffeeround", appContext.getPackageName());
+        assertEquals("uk.org.amey.android.coffeeround", appContext.getPackageName());
     }
 }
