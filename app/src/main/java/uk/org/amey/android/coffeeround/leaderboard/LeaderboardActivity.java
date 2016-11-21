@@ -1,12 +1,11 @@
 package uk.org.amey.android.coffeeround.leaderboard;
 
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import uk.org.amey.android.coffeeround.R;
 
-public class LeaderboardActivity extends AppCompatActivity{
+public class LeaderboardActivity extends AppCompatActivity {
     private LeaderboardContract.Presenter presenter;
 
     @Override

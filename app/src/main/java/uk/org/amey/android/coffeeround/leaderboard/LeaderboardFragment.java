@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -48,8 +49,11 @@ public class LeaderboardFragment extends Fragment implements LeaderboardContract
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.leaderboard_frag, container, false);
 
+        LinearLayoutManager lm = new LinearLayoutManager(this.getActivity());
+
         RecyclerView rv = (RecyclerView) root.findViewById(R.id.leaderboard_list);
-        rv.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+        rv.setLayoutManager(lm);
+        rv.addItemDecoration(new DividerItemDecoration(rv.getContext(), lm.getOrientation()));
         rv.setAdapter(leaderboardAdapter);
 
         return root;
@@ -85,7 +89,7 @@ public class LeaderboardFragment extends Fragment implements LeaderboardContract
     }
 
     @Override
-    public void showNoLeaders() {
+    public void showNoUsers() {
 
     }
 
