@@ -21,6 +21,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import uk.org.amey.android.coffeeround.R;
 
+/**
+ * TODO: No longer used but kept until the logic is migrated out.
+ */
 public class MainActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {

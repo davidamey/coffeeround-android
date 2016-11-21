@@ -4,7 +4,7 @@ import java.util.List;
 
 import uk.org.amey.android.coffeeround.BasePresenter;
 import uk.org.amey.android.coffeeround.BaseView;
-import uk.org.amey.android.coffeeround.data.Person;
+import uk.org.amey.android.coffeeround.data.model.User;
 
 public interface LeaderboardContract {
 
@@ -12,7 +12,7 @@ public interface LeaderboardContract {
 
         void setLoadingIndicator(boolean active);
 
-        void showLeaders(List<Person> people);
+        void showLeaderboard(List<User> users);
 
         void showAddRound();
 
