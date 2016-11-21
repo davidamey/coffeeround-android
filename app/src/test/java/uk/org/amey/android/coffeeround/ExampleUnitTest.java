@@ -1,4 +1,4 @@
-package uk.org.amey.coffeeround;
+package uk.org.amey.android.coffeeround;
 
 import org.junit.Test;
 
