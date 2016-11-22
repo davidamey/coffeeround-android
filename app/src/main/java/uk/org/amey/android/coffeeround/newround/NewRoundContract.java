@@ -1,10 +1,7 @@
 package uk.org.amey.android.coffeeround.newround;
 
-import java.util.List;
-
 import uk.org.amey.android.coffeeround.BasePresenter;
 import uk.org.amey.android.coffeeround.BaseView;
-import uk.org.amey.android.coffeeround.data.model.User;
 
 public interface NewRoundContract {
 

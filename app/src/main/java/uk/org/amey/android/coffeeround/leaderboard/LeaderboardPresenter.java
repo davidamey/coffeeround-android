@@ -1,7 +1,6 @@
 package uk.org.amey.android.coffeeround.leaderboard;
 
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 
 import java.util.List;
 
