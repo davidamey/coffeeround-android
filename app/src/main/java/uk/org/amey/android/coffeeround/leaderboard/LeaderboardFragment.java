@@ -3,6 +3,7 @@ package uk.org.amey.android.coffeeround.leaderboard;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -56,6 +57,14 @@ public class LeaderboardFragment extends Fragment implements LeaderboardContract
         rv.addItemDecoration(new DividerItemDecoration(rv.getContext(), lm.getOrientation()));
         rv.setAdapter(leaderboardAdapter);
 
+//        FloatingActionButton fab = (FloatingActionButton) root.findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                presenter.loadLeaderboard(false);
+//            }
+//        });
+
         return root;
     }
 
@@ -100,6 +109,7 @@ public class LeaderboardFragment extends Fragment implements LeaderboardContract
     //endregion
 
     //region Adapter
+
     private static class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.ViewHolder> {
         private List<User> users;
         private LeaderboardItemListener itemListener;
@@ -159,5 +169,6 @@ public class LeaderboardFragment extends Fragment implements LeaderboardContract
     public interface LeaderboardItemListener {
         void onItemClick(User clickedUser);
     }
+
     //endregion
 }

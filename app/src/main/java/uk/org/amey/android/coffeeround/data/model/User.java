@@ -5,8 +5,7 @@ import com.google.gson.annotations.SerializedName;
 public class User {
 
     public String name;
-    public int totalDay;
-    public int totalWeek;
+    public String picture;
     public int total;
 
 }

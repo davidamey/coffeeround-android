@@ -19,6 +19,7 @@ public interface LeaderboardContract {
         void showLoadingLeaderboardError();
 
         void showNoUsers();
+
     }
 
     interface Presenter extends BasePresenter {

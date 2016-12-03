@@ -14,16 +14,15 @@ import uk.org.amey.android.coffeeround.data.model.User;
 public class LeaderboardPresenter implements LeaderboardContract.Presenter {
 
     private final LeaderboardContract.View view;
-    private final CoffeeRoundApi client;
 
     private boolean firstLoad = true;
 
     public LeaderboardPresenter(@NonNull LeaderboardContract.View view) {
         this.view = view;
         view.setPresenter(this);
-
-        client = CoffeeRoundClientGenerator.getClient();
     }
+
+    //region Contract methods
 
     @Override
     public void start() {
@@ -38,8 +37,8 @@ public class LeaderboardPresenter implements LeaderboardContract.Presenter {
 
     @Override
     public void loadLeaderboard(boolean forceUpdate) {
-        Call<List<User>> call = client.getUsers();
 
+        Call<List<User>> call = CoffeeRoundClientGenerator.getClient().getUsers();
         call.enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
@@ -52,4 +51,6 @@ public class LeaderboardPresenter implements LeaderboardContract.Presenter {
             }
         });
     }
+
+    //endregion
 }
