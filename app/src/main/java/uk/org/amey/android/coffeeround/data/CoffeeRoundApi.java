@@ -2,6 +2,8 @@ package uk.org.amey.android.coffeeround.data;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -20,6 +22,9 @@ public interface CoffeeRoundApi {
 
     @GET("user")
     Call<List<User>> getUsers();
+
+    @GET("user")
+    Flowable<List<User>> getUsersRx();
 
     @GET("user/{username}")
     Call<User> getUserDetails(@Path("username") String username);
