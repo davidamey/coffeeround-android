@@ -30,7 +30,7 @@ ext {
 
     // App dependencies
     supportLibraryVersion = '25.0.1'
-    playServicesVersion = '9.8.0'
+    playServicesVersion = '10.0.1'
     retrofitVersion = '2.1.0'
 
     // Test dependencies

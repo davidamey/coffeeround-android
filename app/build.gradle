@@ -38,11 +38,15 @@ dependencies {
     compile "com.android.support:design:$rootProject.supportLibraryVersion"
     compile "com.google.android.gms:play-services-auth:$rootProject.playServicesVersion"
     compile "com.google.android.gms:play-services-gcm:$rootProject.playServicesVersion"
-    compile 'com.google.code.gson:gson:2.6.2'
+    compile "com.google.firebase:firebase-core:$rootProject.playServicesVersion"
+    compile "com.google.firebase:firebase-messaging:$rootProject.playServicesVersion"
+
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'io.reactivex:rxjava:1.2.3'
     compile 'com.jakewharton.rxbinding:rxbinding:1.0.0'
     compile 'com.jakewharton.rxrelay:rxrelay:1.2.0'
+
+    compile 'com.google.code.gson:gson:2.6.2'
     compile "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
     compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
     compile "com.squareup.retrofit2:adapter-rxjava:$rootProject.retrofitVersion"
@@ -50,3 +54,5 @@ dependencies {
 
     testCompile "junit:junit:$rootProject.ext.junitVersion"
 }
+
+apply plugin: 'com.google.gms.google-services'
