@@ -3,7 +3,6 @@ package uk.org.amey.android.coffeeround.leaderboard;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,13 +15,17 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Observable;
 import uk.org.amey.android.coffeeround.R;
 import uk.org.amey.android.coffeeround.data.model.User;
 
-public class LeaderboardFragment extends Fragment implements LeaderboardContract.View {
+public class LeaderboardFragment extends Fragment implements LeaderboardPresenter.ViewRx {
 
-    private LeaderboardContract.Presenter presenter;
+    private final LeaderboardPresenter presenter = new LeaderboardPresenter();
+
     private LeaderboardAdapter leaderboardAdapter;
+    private RecyclerView leaderBoard;
+    private View loadingView;
 
     public LeaderboardFragment() {
         // Requires empty public constructor
@@ -43,7 +46,13 @@ public class LeaderboardFragment extends Fragment implements LeaderboardContract
     @Override
     public void onResume() {
         super.onResume();
-        presenter.start();
+        presenter.register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.unregister();
     }
 
     @Override
@@ -52,18 +61,12 @@ public class LeaderboardFragment extends Fragment implements LeaderboardContract
 
         LinearLayoutManager lm = new LinearLayoutManager(this.getActivity());
 
-        RecyclerView rv = (RecyclerView) root.findViewById(R.id.leaderboard_list);
-        rv.setLayoutManager(lm);
-        rv.addItemDecoration(new DividerItemDecoration(rv.getContext(), lm.getOrientation()));
-        rv.setAdapter(leaderboardAdapter);
+        leaderBoard = (RecyclerView) root.findViewById(R.id.leaderboard_list);
+        leaderBoard.setLayoutManager(lm);
+        leaderBoard.addItemDecoration(new DividerItemDecoration(leaderBoard.getContext(), lm.getOrientation()));
+        leaderBoard.setAdapter(leaderboardAdapter);
 
-//        FloatingActionButton fab = (FloatingActionButton) root.findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                presenter.loadLeaderboard(false);
-//            }
-//        });
+        loadingView = root.findViewById(R.id.leaderboard_loader);
 
         return root;
     }
@@ -73,37 +76,35 @@ public class LeaderboardFragment extends Fragment implements LeaderboardContract
     //region Contract
 
     @Override
-    public void setPresenter(LeaderboardContract.Presenter presenter) {
-        this.presenter = presenter;
+    public Observable<Void> onRefreshAction() {
+        return Observable.just(null);
+    }
+
+
+    @Override
+    public void showLoading() {
+        loadingView.setVisibility(View.VISIBLE);
+        leaderBoard.setVisibility(View.GONE);
     }
 
     @Override
-    public void setLoadingIndicator(boolean active) {
-
+    public void hideLoading() {
+        loadingView.setVisibility(View.GONE);
+        leaderBoard.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showLeaderboard(List<User> users) {
-        leaderboardAdapter.replaceData(users);
-    }
-
-    @Override
-    public void showAddRound() {
-        Snackbar.make(this.getView(), "Presenter start", Snackbar.LENGTH_SHORT).show();
+        if (users == null || users.size() == 0) {
+            // Show no users view
+        } else {
+            leaderboardAdapter.replaceData(users);
+        }
     }
 
     @Override
     public void showLoadingLeaderboardError() {
-
-    }
-
-    @Override
-    public void showNoUsers() {
-    }
-
-    @Override
-    public boolean isActive() {
-        return isAdded();
+        Snackbar.make(this.getView(), "Oh noes!", Snackbar.LENGTH_SHORT).show();
     }
 
     //endregion

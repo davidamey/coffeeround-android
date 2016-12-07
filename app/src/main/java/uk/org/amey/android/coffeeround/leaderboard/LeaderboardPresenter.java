@@ -2,48 +2,44 @@ package uk.org.amey.android.coffeeround.leaderboard;
 
 import android.support.annotation.NonNull;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import java.util.List;
+
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import uk.org.amey.android.coffeeround.BasePresenterRx;
 import uk.org.amey.android.coffeeround.data.CoffeeRoundClientGenerator;
+import uk.org.amey.android.coffeeround.data.model.User;
 
-public class LeaderboardPresenter implements LeaderboardContract.Presenter {
+class LeaderboardPresenter extends BasePresenterRx<LeaderboardPresenter.ViewRx> {
 
-    private final LeaderboardContract.View view;
+    interface ViewRx extends BasePresenterRx.ViewInterface {
+        Observable<Void> onRefreshAction();
 
-    private boolean firstLoad = true;
-
-    public LeaderboardPresenter(@NonNull LeaderboardContract.View view) {
-        this.view = view;
-        view.setPresenter(this);
-    }
-
-    //region Contract methods
-
-    @Override
-    public void start() {
-        view.showAddRound();
-        loadLeaderboard(false);
+        void showLoading();
+        void hideLoading();
+        void showLeaderboard(List<User> users);
+        void showLoadingLeaderboardError();
     }
 
     @Override
-    public void result(int requestCode, int resultCode) {
+    public void register(ViewRx view) {
+        super.register(view);
 
-    }
-
-    @Override
-    public void loadLeaderboard(boolean forceUpdate) {
-
-        CoffeeRoundClientGenerator.getClient().getUsersRx()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .unsubscribeOn(Schedulers.io())
+        addToUnsubscribe(view.onRefreshAction()
+                .doOnNext(ignored -> view.showLoading())
+                .switchMap(ignored -> CoffeeRoundClientGenerator.getClient().getUsers()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .onErrorResumeNext(throwable -> {
+                        view.showLoadingLeaderboardError();
+                        return Observable.just(null);
+                    })
+                )
                 .subscribe(users -> {
                     view.showLeaderboard(users);
-                }, err -> {
-                    view.showLoadingLeaderboardError();
-                });
-
+                    view.hideLoading();
+                })
+        );
     }
-
-    //endregion
 }

@@ -7,8 +7,6 @@ import uk.org.amey.android.coffeeround.R;
 
 public class LeaderboardActivity extends AppCompatActivity {
 
-    private LeaderboardContract.Presenter presenter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,7 +22,6 @@ public class LeaderboardActivity extends AppCompatActivity {
                     .add(R.id.content_view, leaderboardFragment)
                     .commit();
         }
-
-        presenter = new LeaderboardPresenter(leaderboardFragment);
     }
+
 }

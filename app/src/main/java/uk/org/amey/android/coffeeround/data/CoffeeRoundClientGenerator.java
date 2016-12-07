@@ -1,9 +1,8 @@
 package uk.org.amey.android.coffeeround.data;
 
-import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public final class CoffeeRoundClientGenerator {
@@ -21,7 +20,7 @@ public final class CoffeeRoundClientGenerator {
         if (client == null) {
             Retrofit.Builder builder = new Retrofit.Builder()
                     .baseUrl(API_BASE_URL)
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create());
 
             OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
