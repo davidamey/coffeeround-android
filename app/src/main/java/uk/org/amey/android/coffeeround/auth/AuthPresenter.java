@@ -1,12 +1,15 @@
 package uk.org.amey.android.coffeeround.auth;
 
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import uk.org.amey.android.coffeeround.BasePresenterRx;
+import uk.org.amey.android.coffeeround.data.CoffeeRoundApi;
 import uk.org.amey.android.coffeeround.data.CoffeeRoundClientGenerator;
+import uk.org.amey.android.coffeeround.data.model.TokenResponse;
 
 class AuthPresenter extends BasePresenterRx<AuthPresenter.ViewRx> {
 
@@ -19,6 +22,12 @@ class AuthPresenter extends BasePresenterRx<AuthPresenter.ViewRx> {
 
         void showAuthPromptView();
         void showAuthenticatedView();
+    }
+
+    private final CoffeeRoundApi client;
+
+    public AuthPresenter(CoffeeRoundApi client) {
+        this.client = client;
     }
 
     @Override
@@ -35,13 +44,15 @@ class AuthPresenter extends BasePresenterRx<AuthPresenter.ViewRx> {
                     }
 
                     String idToken = googleSignInResult.getSignInAccount().getIdToken();
-                    return CoffeeRoundClientGenerator.getClient().login(idToken)
+                    Observable<TokenResponse> response = client.login(idToken)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .onErrorResumeNext(throwable -> {
                                 // TODO: handle error
                                 return Observable.just(null);
                             });
+
+                    return response;
                 })
                 .subscribe(response -> {
                     if (response == null) {

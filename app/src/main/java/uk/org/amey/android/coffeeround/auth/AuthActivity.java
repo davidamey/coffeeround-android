@@ -14,7 +14,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.net.ConnectException;
 
@@ -22,6 +21,7 @@ import rx.Observable;
 import rx.subjects.AsyncSubject;
 import uk.org.amey.android.coffeeround.BasePresenterRx;
 import uk.org.amey.android.coffeeround.R;
+import uk.org.amey.android.coffeeround.data.CoffeeRoundClientGenerator;
 import uk.org.amey.android.coffeeround.leaderboard.LeaderboardActivity;
 
 public class AuthActivity extends AppCompatActivity implements
@@ -63,7 +63,8 @@ public class AuthActivity extends AppCompatActivity implements
         signInButton = (SignInButton)findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(ignored -> signIn());
 
-        presenter = new AuthPresenter();
+        // TODO: Inject this client from somewhere other than the view - probably Dagger
+        presenter = new AuthPresenter(CoffeeRoundClientGenerator.getClient());
     }
 
     @Override
