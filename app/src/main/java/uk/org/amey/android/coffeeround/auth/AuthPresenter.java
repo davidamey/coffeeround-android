@@ -1,19 +1,18 @@
 package uk.org.amey.android.coffeeround.auth;
 
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import uk.org.amey.android.coffeeround.BasePresenterRx;
+import uk.org.amey.android.coffeeround.BasePresenter;
 import uk.org.amey.android.coffeeround.data.CoffeeRoundApi;
 import uk.org.amey.android.coffeeround.data.CoffeeRoundClientGenerator;
 import uk.org.amey.android.coffeeround.data.model.TokenResponse;
 
-class AuthPresenter extends BasePresenterRx<AuthPresenter.ViewRx> {
+class AuthPresenter extends BasePresenter<AuthPresenter.ViewInterface> {
 
-    interface ViewRx extends BasePresenterRx.ViewInterface {
+    interface ViewInterface extends BasePresenter.ViewInterface {
         Observable<GoogleSignInResult> onSignInResult();
 
         void showLoading();
@@ -31,7 +30,7 @@ class AuthPresenter extends BasePresenterRx<AuthPresenter.ViewRx> {
     }
 
     @Override
-    public void register(ViewRx view) {
+    public void register(ViewInterface view) {
         super.register(view);
         // Silent sign in if we can...
         // TODO: Silent sign in

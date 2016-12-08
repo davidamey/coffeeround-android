@@ -1,19 +1,17 @@
 package uk.org.amey.android.coffeeround.leaderboard;
 
-import android.support.annotation.NonNull;
-
 import java.util.List;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import uk.org.amey.android.coffeeround.BasePresenterRx;
+import uk.org.amey.android.coffeeround.BasePresenter;
 import uk.org.amey.android.coffeeround.data.CoffeeRoundClientGenerator;
 import uk.org.amey.android.coffeeround.data.model.User;
 
-class LeaderboardPresenter extends BasePresenterRx<LeaderboardPresenter.ViewRx> {
+class LeaderboardPresenter extends BasePresenter<LeaderboardPresenter.ViewInterface> {
 
-    interface ViewRx extends BasePresenterRx.ViewInterface {
+    interface ViewInterface extends BasePresenter.ViewInterface {
         Observable<Void> onRefreshAction();
 
         void showLoading();
@@ -23,7 +21,7 @@ class LeaderboardPresenter extends BasePresenterRx<LeaderboardPresenter.ViewRx> 
     }
 
     @Override
-    public void register(ViewRx view) {
+    public void register(ViewInterface view) {
         super.register(view);
 
         addToUnsubscribe(view.onRefreshAction()

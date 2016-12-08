@@ -19,19 +19,19 @@ import java.net.ConnectException;
 
 import rx.Observable;
 import rx.subjects.AsyncSubject;
-import uk.org.amey.android.coffeeround.BasePresenterRx;
+import uk.org.amey.android.coffeeround.BasePresenter;
 import uk.org.amey.android.coffeeround.R;
 import uk.org.amey.android.coffeeround.data.CoffeeRoundClientGenerator;
 import uk.org.amey.android.coffeeround.leaderboard.LeaderboardActivity;
 
 public class AuthActivity extends AppCompatActivity implements
-        AuthPresenter.ViewRx,
+        AuthPresenter.ViewInterface,
         GoogleApiClient.OnConnectionFailedListener {
 
     private static final String SERVER_CLIENT_ID = "935541831045-q8djcuoo3hdrnvg6nvpjjk45lg0gps9o.apps.googleusercontent.com";
     private static final int RC_SIGN_IN = 9001;
 
-    private BasePresenterRx presenter;
+    private BasePresenter presenter;
     private GoogleApiClient googleApiClient;
     private SignInButton signInButton;
 

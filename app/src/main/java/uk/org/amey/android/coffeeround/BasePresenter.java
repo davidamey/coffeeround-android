@@ -6,11 +6,9 @@ import android.support.annotation.NonNull;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
-public class BasePresenterRx<V extends BasePresenterRx.ViewInterface> {
+public class BasePresenter<V extends BasePresenter.ViewInterface> {
 
-    public interface ViewInterface {
-//        void setPresenter(BasePresenterRx presenter);
-    }
+    protected interface ViewInterface {}
 
     private final CompositeSubscription compositeSubscription = new CompositeSubscription();
 

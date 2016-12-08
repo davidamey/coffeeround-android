@@ -25,7 +25,8 @@ public class AuthPresenterTest {
     @Mock GoogleSignInResult mockSignInResult;
     @Mock GoogleSignInAccount mockSignInAccount;
 
-    @Mock AuthPresenter.ViewRx mockView;
+    @Mock
+    AuthPresenter.ViewInterface mockView;
 
     @Rule
     public final RxSchedulersOverrideRule schedulersOverrideRule = new RxSchedulersOverrideRule();

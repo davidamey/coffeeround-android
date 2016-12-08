@@ -8,7 +8,6 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -19,13 +18,13 @@ import rx.Observable;
 import uk.org.amey.android.coffeeround.R;
 import uk.org.amey.android.coffeeround.data.model.User;
 
-public class LeaderboardFragment extends Fragment implements LeaderboardPresenter.ViewRx {
+public class LeaderboardFragment extends Fragment implements LeaderboardPresenter.ViewInterface {
 
     private final LeaderboardPresenter presenter = new LeaderboardPresenter();
 
     private LeaderboardAdapter leaderboardAdapter;
     private RecyclerView leaderBoard;
-    private View loadingView;
+    private android.view.View loadingView;
 
     public LeaderboardFragment() {
         // Requires empty public constructor
@@ -56,8 +55,8 @@ public class LeaderboardFragment extends Fragment implements LeaderboardPresente
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.leaderboard_frag, container, false);
+    public android.view.View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        android.view.View root = inflater.inflate(R.layout.leaderboard_frag, container, false);
 
         LinearLayoutManager lm = new LinearLayoutManager(this.getActivity());
 
@@ -83,14 +82,14 @@ public class LeaderboardFragment extends Fragment implements LeaderboardPresente
 
     @Override
     public void showLoading() {
-        loadingView.setVisibility(View.VISIBLE);
-        leaderBoard.setVisibility(View.GONE);
+        loadingView.setVisibility(android.view.View.VISIBLE);
+        leaderBoard.setVisibility(android.view.View.GONE);
     }
 
     @Override
     public void hideLoading() {
-        loadingView.setVisibility(View.GONE);
-        leaderBoard.setVisibility(View.VISIBLE);
+        loadingView.setVisibility(android.view.View.GONE);
+        leaderBoard.setVisibility(android.view.View.VISIBLE);
     }
 
     @Override
@@ -120,7 +119,7 @@ public class LeaderboardFragment extends Fragment implements LeaderboardPresente
             private final TextView tvUserName;
             private final TextView tvCountTotal;
 
-            ViewHolder(View itemView) {
+            ViewHolder(android.view.View itemView) {
                 super(itemView);
 
                 tvUserName = (TextView)itemView.findViewById(R.id.user_name);
@@ -143,7 +142,7 @@ public class LeaderboardFragment extends Fragment implements LeaderboardPresente
 
         @Override
         public LeaderboardAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext())
+            android.view.View v = LayoutInflater.from(parent.getContext())
                                    .inflate(R.layout.leaderboard_item, parent, false);
 
             return new ViewHolder(v);
