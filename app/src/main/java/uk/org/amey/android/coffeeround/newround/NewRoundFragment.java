@@ -59,7 +59,6 @@ public class NewRoundFragment extends Fragment implements NewRoundPresenter.View
         presenter.unregister();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public android.view.View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         android.view.View root = inflater.inflate(R.layout.newround_frag, container, false);
