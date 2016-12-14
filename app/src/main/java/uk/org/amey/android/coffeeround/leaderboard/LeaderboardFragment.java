@@ -1,8 +1,11 @@
 package uk.org.amey.android.coffeeround.leaderboard;
 
 import android.app.Fragment;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,16 +14,21 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxrelay.PublishRelay;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
 import uk.org.amey.android.coffeeround.R;
 import uk.org.amey.android.coffeeround.data.model.User;
+import uk.org.amey.android.coffeeround.newround.NewRoundActivity;
 
 public class LeaderboardFragment extends Fragment implements LeaderboardPresenter.ViewInterface {
 
     private final LeaderboardPresenter presenter = new LeaderboardPresenter();
+    private final PublishRelay<Void> fabClickedRelay = PublishRelay.create();
 
     private LeaderboardAdapter leaderboardAdapter;
     private RecyclerView leaderBoard;
@@ -67,6 +75,12 @@ public class LeaderboardFragment extends Fragment implements LeaderboardPresente
 
         loadingView = root.findViewById(R.id.leaderboard_loader);
 
+        // Set up floating action button
+        FloatingActionButton fab =
+                (FloatingActionButton) getActivity().findViewById(R.id.fab);
+
+        RxView.clicks(fab).subscribe(click -> fabClickedRelay.call(null));
+
         return root;
     }
 
@@ -79,6 +93,10 @@ public class LeaderboardFragment extends Fragment implements LeaderboardPresente
         return Observable.just(null);
     }
 
+    @Override
+    public Observable<Void> onNewRoundAction() {
+        return fabClickedRelay;
+    }
 
     @Override
     public void showLoading() {
@@ -93,6 +111,13 @@ public class LeaderboardFragment extends Fragment implements LeaderboardPresente
     }
 
     @Override
+    public void showError(String msg) {
+        Snackbar sb = Snackbar.make(this.getView(), msg, Snackbar.LENGTH_SHORT);
+        sb.getView().setBackgroundColor(Color.RED);
+        sb.show();
+    }
+
+    @Override
     public void showLeaderboard(List<User> users) {
         if (users == null || users.size() == 0) {
             // Show no users view
@@ -102,8 +127,9 @@ public class LeaderboardFragment extends Fragment implements LeaderboardPresente
     }
 
     @Override
-    public void showLoadingLeaderboardError() {
-        Snackbar.make(this.getView(), "Oh noes!", Snackbar.LENGTH_SHORT).show();
+    public void createNewRound() {
+        Intent intent = new Intent(getActivity(), NewRoundActivity.class);
+        startActivity(intent);
     }
 
     //endregion

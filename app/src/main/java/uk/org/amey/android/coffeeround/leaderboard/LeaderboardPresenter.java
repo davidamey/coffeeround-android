@@ -13,11 +13,14 @@ class LeaderboardPresenter extends BasePresenter<LeaderboardPresenter.ViewInterf
 
     interface ViewInterface extends BasePresenter.ViewInterface {
         Observable<Void> onRefreshAction();
+        Observable<Void> onNewRoundAction();
 
         void showLoading();
         void hideLoading();
+        void showError(String msg);
+        
         void showLeaderboard(List<User> users);
-        void showLoadingLeaderboardError();
+        void createNewRound();
     }
 
     @Override
@@ -30,7 +33,7 @@ class LeaderboardPresenter extends BasePresenter<LeaderboardPresenter.ViewInterf
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .onErrorResumeNext(throwable -> {
-                        view.showLoadingLeaderboardError();
+                        view.showError("Unable to get users");
                         return Observable.just(null);
                     })
                 )
@@ -38,6 +41,10 @@ class LeaderboardPresenter extends BasePresenter<LeaderboardPresenter.ViewInterf
                     view.showLeaderboard(users);
                     view.hideLoading();
                 })
+        );
+
+        addToUnsubscribe(view.onNewRoundAction()
+                .subscribe(ignored -> view.createNewRound())
         );
     }
 }

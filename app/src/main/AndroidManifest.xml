@@ -26,6 +26,12 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
+        <activity
+            android:name=".newround.NewRoundActivity"
+            android:label="@string/activity_newround"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
         <service
             android:name=".fcm.AppFirebaseMessagingService">
             <intent-filter>

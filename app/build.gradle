@@ -36,6 +36,7 @@ dependencies {
     })
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:design:$rootProject.supportLibraryVersion"
+    compile "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
     compile "com.google.android.gms:play-services-auth:$rootProject.playServicesVersion"
     compile "com.google.android.gms:play-services-gcm:$rootProject.playServicesVersion"
     compile "com.google.firebase:firebase-core:$rootProject.playServicesVersion"
@@ -43,8 +44,9 @@ dependencies {
 
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'io.reactivex:rxjava:1.2.3'
-    compile 'com.jakewharton.rxbinding:rxbinding:1.0.0'
     compile 'com.jakewharton.rxrelay:rxrelay:1.2.0'
+    compile "com.jakewharton.rxbinding:rxbinding:$rootProject.rxBindingVersion"
+    compile "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:$rootProject.rxBindingVersion"
 
     compile 'com.google.code.gson:gson:2.6.2'
     compile "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
