@@ -6,7 +6,7 @@
     <item
         android:id="@+id/save_round"
         android:title="Save Round"
-        android:icon="@drawable/ic_send_black_24dp"
+        android:icon="@drawable/ic_send_white_24dp"
         app:showAsAction="always" />
 
 </menu>
