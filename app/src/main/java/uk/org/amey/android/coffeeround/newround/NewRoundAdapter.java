@@ -18,16 +18,16 @@ import uk.org.amey.android.coffeeround.data.model.User;
 
 class NewRoundAdapter extends RecyclerView.Adapter<NewRoundAdapter.ViewHolder> {
 
-    public static class SelectionChangedItem {
-        public final int position;
-        public final User user;
-        public final boolean selected;
+    static class SelectionChangedItem {
+       final int position;
+       final User user;
+       final boolean selected;
 
-        public SelectionChangedItem(int position, User user, boolean selected) {
-            this.position = position;
-            this.user = user;
-            this.selected = selected;
-        }
+       SelectionChangedItem(int position, User user, boolean selected) {
+           this.position = position;
+           this.user = user;
+           this.selected = selected;
+       }
     }
 
     private PublishRelay<SelectionChangedItem> itemClickRelay = PublishRelay.create();
@@ -35,7 +35,7 @@ class NewRoundAdapter extends RecyclerView.Adapter<NewRoundAdapter.ViewHolder> {
     private List<User> users;
     private int itemResource;
 
-    public Observable<SelectionChangedItem> onItemClicked() {
+    Observable<SelectionChangedItem> onItemClicked() {
         return itemClickRelay;
     }
 
@@ -51,12 +51,14 @@ class NewRoundAdapter extends RecyclerView.Adapter<NewRoundAdapter.ViewHolder> {
             checkMark = itemView.findViewById(R.id.check_mark);
         }
 
-        public void setUser(User user) {
+        void setUser(User user) {
             this.user = user;
             tvUserName.setText(user.name);
         }
 
-        public void setSelected(boolean selected) {
+        void setSelected(boolean selected) {
+            // Checking for null here allows us to use a single adapter
+            // for both 'all users' and 'selected users' list
             if (checkMark != null) {
                 if (selected) {
                     checkMark.setVisibility(View.VISIBLE);
@@ -67,7 +69,7 @@ class NewRoundAdapter extends RecyclerView.Adapter<NewRoundAdapter.ViewHolder> {
         }
     }
 
-    public NewRoundAdapter(List<User> users, int itemResource) {
+    NewRoundAdapter(List<User> users, int itemResource) {
         this.users = users;
         this.itemResource = itemResource;
     }
@@ -126,7 +128,7 @@ class NewRoundAdapter extends RecyclerView.Adapter<NewRoundAdapter.ViewHolder> {
         }
     }
 
-    public void deselect(User user) {
+    void deselect(User user) {
         int pos = users.indexOf(user);
         if (pos >= 0) {
             selectedPositions.put(pos, false);

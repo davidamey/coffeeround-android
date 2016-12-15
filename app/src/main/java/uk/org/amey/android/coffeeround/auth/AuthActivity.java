@@ -135,7 +135,9 @@ public class AuthActivity extends AppCompatActivity implements
     @Override
     public void showAuthenticatedView() {
         Intent toAuthIntent = new Intent(this, LeaderboardActivity.class);
+        toAuthIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(toAuthIntent);
+        finish();
     }
 
     //endregion
