@@ -13,10 +13,14 @@ import uk.org.amey.android.coffeeround.data.model.TokenResponse;
 class AuthPresenter extends BasePresenter<AuthPresenter.ViewInterface> {
 
     interface ViewInterface extends BasePresenter.ViewInterface {
+        Observable<Void> onSignInRequested();
         Observable<GoogleSignInResult> onSignInResult();
 
         void showLoading();
         void hideLoading();
+
+        void silentSignIn();
+        void signIn();
 
         void showAuthPromptView();
         void showAuthenticatedView();
@@ -31,11 +35,15 @@ class AuthPresenter extends BasePresenter<AuthPresenter.ViewInterface> {
     @Override
     public void register(ViewInterface view) {
         super.register(view);
-        // Silent sign in if we can...
-        // TODO: Silent sign in
+
+        addToUnsubscribe(view.onSignInRequested()
+                .subscribe(ignored -> {
+                    view.showLoading();
+                    view.signIn();
+                })
+        );
 
         addToUnsubscribe(view.onSignInResult()
-                .doOnNext(ignored -> view.showLoading())
                 .switchMap(googleSignInResult -> {
                     if (!googleSignInResult.isSuccess()) {
                         return Observable.just(null);
@@ -45,13 +53,12 @@ class AuthPresenter extends BasePresenter<AuthPresenter.ViewInterface> {
                     return client.login(idToken)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .onErrorResumeNext(throwable -> {
-                                // TODO: handle error
-                                return Observable.just(null);
-                            });
+                            .onErrorResumeNext(throwable -> Observable.just(null));
                 })
                 .subscribe(response -> {
                     if (response == null) {
+                        view.hideLoading();
+                        view.showError("Unable to sign in");
                         return;
                     }
 
@@ -61,10 +68,15 @@ class AuthPresenter extends BasePresenter<AuthPresenter.ViewInterface> {
                         view.hideLoading();
                         view.showAuthenticatedView();
                     }
-                }, throwable -> view.showError("Unable to sign in"))
+                }, throwable -> {
+                    view.hideLoading();
+                    view.showError("Unable to sign in");
+                })
         );
 
-        // ...otherwise prompt to auth
+        // Show the auth prompt view but also silent sign in
         view.showAuthPromptView();
+        view.showLoading();
+        view.silentSignIn();
     }
 }

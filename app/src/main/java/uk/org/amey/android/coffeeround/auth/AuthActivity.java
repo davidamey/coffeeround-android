@@ -1,5 +1,6 @@
 package uk.org.amey.android.coffeeround.auth;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,11 +15,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-
-import java.net.ConnectException;
+import com.google.android.gms.common.api.OptionalPendingResult;
+import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxrelay.BehaviorRelay;
+import com.jakewharton.rxrelay.PublishRelay;
 
 import rx.Observable;
-import rx.subjects.AsyncSubject;
 import uk.org.amey.android.coffeeround.BasePresenter;
 import uk.org.amey.android.coffeeround.R;
 import uk.org.amey.android.coffeeround.data.CoffeeRoundClientGenerator;
@@ -34,9 +36,10 @@ public class AuthActivity extends AppCompatActivity implements
     private BasePresenter presenter;
     private GoogleApiClient googleApiClient;
     private SignInButton signInButton;
+    private ProgressDialog progressDialog;
 
-    // Create an initial subject although this gets recreated in the signIn() method.
-    private AsyncSubject<GoogleSignInResult> signInSubject = AsyncSubject.create();
+    private BehaviorRelay<GoogleSignInResult> signInRelay = BehaviorRelay.create();
+    private PublishRelay<Void> signInClickRelay = PublishRelay.create();
 
     //region Lifecycle
 
@@ -61,7 +64,7 @@ public class AuthActivity extends AppCompatActivity implements
         setContentView(R.layout.auth_act);
 
         signInButton = (SignInButton)findViewById(R.id.sign_in_button);
-        signInButton.setOnClickListener(ignored -> signIn());
+        RxView.clicks(signInButton).subscribe(signInClickRelay);
 
         // TODO: Inject this client from somewhere other than the view - probably Dagger
         presenter = new AuthPresenter(CoffeeRoundClientGenerator.getClient());
@@ -87,10 +90,9 @@ public class AuthActivity extends AppCompatActivity implements
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
                 GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-                signInSubject.onNext(result);
-                signInSubject.onCompleted();
+                signInRelay.call(result);
             } else {
-                signInSubject.onError(new Exception("Unable to sign in"));
+                signInRelay.call(null);
             }
         }
     }
@@ -100,15 +102,31 @@ public class AuthActivity extends AppCompatActivity implements
     //region Contract
 
     @Override
-    public Observable<GoogleSignInResult> onSignInResult() {
-        return signInSubject;
+    public Observable<Void> onSignInRequested() {
+        return signInClickRelay;
     }
 
     @Override
-    public void showLoading() {}
+    public Observable<GoogleSignInResult> onSignInResult() {
+        return signInRelay;
+    }
 
     @Override
-    public void hideLoading() {}
+    public void showLoading() {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("Signing in...");
+            progressDialog.setIndeterminate(true);
+        }
+        progressDialog.show();
+    }
+
+    @Override
+    public void hideLoading() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.hide();
+        }
+    }
 
     @Override
     public void showError(String msg) {
@@ -118,16 +136,27 @@ public class AuthActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void silentSignIn() {
+        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(googleApiClient);
+
+        if (opr.isDone()) {
+            // There's immediate result available.
+            signInRelay.call(opr.get());
+        } else {
+            // There's no immediate result ready, displays some progress indicator and waits for the
+            // async callback.
+            opr.setResultCallback(signInResult -> {
+                signInRelay.call(signInResult);
+            });
+        }
+    }
+
+    @Override
     public void showAuthPromptView() {
         signInButton.setVisibility(View.VISIBLE);
     }
 
     public void signIn() {
-        // New signIn attempt so we need a new observable for the presenter to subscribe to.
-        // The presenter subscribes (atm) in onResume so will always pick this up after we return
-        // from the GoogleSignIn activity. #neverfails
-        signInSubject = AsyncSubject.create();
-
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -146,7 +175,7 @@ public class AuthActivity extends AppCompatActivity implements
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        signInSubject.onError(new ConnectException(connectionResult.getErrorMessage()));
+        signInRelay.call(null);
     }
 
     //endregion
