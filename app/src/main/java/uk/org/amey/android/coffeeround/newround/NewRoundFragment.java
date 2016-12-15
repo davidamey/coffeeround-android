@@ -1,27 +1,32 @@
 package uk.org.amey.android.coffeeround.newround;
 
-import android.app.Fragment;
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.jakewharton.rxrelay.PublishRelay;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
+import uk.org.amey.android.coffeeround.BaseFragment;
 import uk.org.amey.android.coffeeround.R;
 import uk.org.amey.android.coffeeround.data.CoffeeRoundClientGenerator;
 import uk.org.amey.android.coffeeround.data.model.User;
+import uk.org.amey.android.coffeeround.leaderboard.LeaderboardActivity;
 
 
-public class NewRoundFragment extends Fragment implements NewRoundPresenter.ViewInterface {
+public class NewRoundFragment extends BaseFragment implements NewRoundPresenter.ViewInterface {
 
     private final NewRoundPresenter presenter = new NewRoundPresenter(CoffeeRoundClientGenerator.getClient());
 
@@ -30,6 +35,9 @@ public class NewRoundFragment extends Fragment implements NewRoundPresenter.View
 
     private RecyclerView selectedUsersRV;
     private RecyclerView allUsersRV;
+
+    private PublishRelay<Void> navigateUpRelay = PublishRelay.create();
+    private PublishRelay<Void> saveRoundRelay = PublishRelay.create();
 
     public NewRoundFragment() {
         // Requires empty public constructor
@@ -45,6 +53,7 @@ public class NewRoundFragment extends Fragment implements NewRoundPresenter.View
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        setHasOptionsMenu(true);
 
         selectedUsersAdapter.onItemClicked()
                 .subscribe(data -> {
@@ -78,6 +87,27 @@ public class NewRoundFragment extends Fragment implements NewRoundPresenter.View
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.menu_newround, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent homeIntent = new Intent(getActivity(), LeaderboardActivity.class);
+                homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(homeIntent);
+                break;
+            case R.id.save_round:
+                saveRoundRelay.call(null);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public android.view.View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         android.view.View root = inflater.inflate(R.layout.newround_frag, container, false);
 
@@ -103,8 +133,13 @@ public class NewRoundFragment extends Fragment implements NewRoundPresenter.View
     //region Contract
 
     @Override
-    public Observable<Void> onSubmitNewRound() {
-        return null;
+    public Observable<Void> onNavigateUp() {
+        return navigateUpRelay;
+    }
+
+    @Override
+    public Observable<Void> onSaveRound() {
+        return saveRoundRelay;
     }
 
     @Override
@@ -117,19 +152,18 @@ public class NewRoundFragment extends Fragment implements NewRoundPresenter.View
         // TODO
     }
 
-    @Override
-    public void showError(String msg) {
-        View v = getView();
-        if (v != null) {
-            Snackbar sb = Snackbar.make(v, msg, Snackbar.LENGTH_SHORT);
-            sb.getView().setBackgroundColor(Color.RED);
-            sb.show();
-        }
-    }
+
 
     @Override
     public void showUsers(List<User> users) {
         allUsersAdapter.replaceData(users);
+    }
+
+    @Override
+    public void navigateToLeaderboard() {
+        Intent homeIntent = new Intent(getActivity(), LeaderboardActivity.class);
+        homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(homeIntent);
     }
 
     //endregion

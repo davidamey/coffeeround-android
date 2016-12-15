@@ -17,7 +17,6 @@ class AuthPresenter extends BasePresenter<AuthPresenter.ViewInterface> {
 
         void showLoading();
         void hideLoading();
-        void showError(String msg);
 
         void showAuthPromptView();
         void showAuthenticatedView();
@@ -43,15 +42,13 @@ class AuthPresenter extends BasePresenter<AuthPresenter.ViewInterface> {
                     }
 
                     String idToken = googleSignInResult.getSignInAccount().getIdToken();
-                    Observable<TokenResponse> response = client.login(idToken)
+                    return client.login(idToken)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .onErrorResumeNext(throwable -> {
                                 // TODO: handle error
                                 return Observable.just(null);
                             });
-
-                    return response;
                 })
                 .subscribe(response -> {
                     if (response == null) {

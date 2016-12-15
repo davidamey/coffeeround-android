@@ -11,13 +11,14 @@ import uk.org.amey.android.coffeeround.data.model.User;
 public class NewRoundPresenter extends BasePresenter<NewRoundPresenter.ViewInterface> {
 
     interface ViewInterface extends BasePresenter.ViewInterface {
-        Observable<Void> onSubmitNewRound(); // Needs submitted data
+        Observable<Void> onNavigateUp(); // Needs submitted data
+        Observable<Void> onSaveRound();
 
         void showLoading();
         void hideLoading();
-        void showError(String msg);
 
         void showUsers(List<User> users);
+        void navigateToLeaderboard();
     }
 
     private final List<User> users = new ArrayList<User>();
@@ -33,11 +34,16 @@ public class NewRoundPresenter extends BasePresenter<NewRoundPresenter.ViewInter
                 }
             });
         }
+
     }
 
     @Override
     public void register(ViewInterface view) {
         super.register(view);
+
+        view.onNavigateUp().subscribe(ignored -> view.navigateToLeaderboard());
+
+        view.onSaveRound().subscribe(ignored -> view.showError("woo"));
 
         view.showUsers(users);
     }

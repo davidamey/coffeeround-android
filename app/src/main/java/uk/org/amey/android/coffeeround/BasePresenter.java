@@ -8,7 +8,9 @@ import rx.subscriptions.CompositeSubscription;
 
 public class BasePresenter<V extends BasePresenter.ViewInterface> {
 
-    public interface ViewInterface {}
+    public interface ViewInterface {
+        void showError(String msg);
+    }
 
     private final CompositeSubscription compositeSubscription = new CompositeSubscription();
 

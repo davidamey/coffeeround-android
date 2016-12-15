@@ -17,8 +17,7 @@ class LeaderboardPresenter extends BasePresenter<LeaderboardPresenter.ViewInterf
 
         void showLoading();
         void hideLoading();
-        void showError(String msg);
-        
+
         void showLeaderboard(List<User> users);
         void createNewRound();
     }
